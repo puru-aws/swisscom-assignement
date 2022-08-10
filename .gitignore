@@ -1,0 +1,24 @@
+ansible/.terraform/*
+siemens-ec2/.terraform/*
+
+*.tfstate
+*.tfstate.backup
+
+### Terraform ###
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json

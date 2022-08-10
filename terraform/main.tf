@@ -6,7 +6,13 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
-
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "AES256"
+      }
+    }
+  }
   tags = {
     Environment = var.environment
   }
@@ -58,6 +64,12 @@ resource "aws_sfn_state_machine" "sfn_state_machine" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "lambda_logging" {
+  name              = "/aws/lambda/${var.function_name}"
+  retention_in_days = 14
+}
+
+
 resource "aws_lambda_function" "lambda_trigger" {
   function_name    = var.function_name
   role             = aws_iam_role.lambda_iam.arn
@@ -66,6 +78,10 @@ resource "aws_lambda_function" "lambda_trigger" {
   timeout          = var.timeout
   filename         = "./src.zip"
   source_code_hash = filebase64sha256("./src.zip")
+  depends_on = [
+    aws_iam_role_policy_attachment.lambda_logs,
+    aws_cloudwatch_log_group.lambda_logging,
+  ]
   environment {
     variables = {
       env            = var.environment
