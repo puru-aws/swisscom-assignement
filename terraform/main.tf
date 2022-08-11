@@ -1,6 +1,6 @@
-provider "aws" {
-  region = var.region
-}
+#provider "aws" {
+#  region = var.region
+#}
 
 data "aws_caller_identity" "current" {}
 
@@ -28,9 +28,9 @@ resource "aws_dynamodb_table" "S3ObjectTable" {
     type = "S"
   }
   hash_key = "FileName"
-  point_in_time_recovery {
-    enabled = true
-  }
+  #point_in_time_recovery {
+  #  enabled = true
+  #}
   server_side_encryption {
     enabled = true
   }
